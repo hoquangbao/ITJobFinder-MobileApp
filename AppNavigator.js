@@ -6,9 +6,11 @@ import DashBoard from "./screens/DashBoard";
 import DashBoard_Employer from "./screens/DashBoard_Employer";
 import Register from "./screens/Register";
 import JobDetail from "./screens/JobDetail";
-import CompanyDetail from "./screens/CompanyDetail";
 import SearchJob from "./screens/SearchJob"
 import UserProfile from "./screens/UserProfile";
+import CreateJob from "./screens/CreateJob";
+import CompanyDetail from "./screens/CompanyDetail";
+import CreateCompany from "./screens/CreateCompany";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Icon } from "react-native-elements";
 
@@ -66,12 +68,12 @@ const AppNavigator = createStackNavigator({
         headerRight: (
           <TouchableOpacity
             style={{ margin: 10 }}
-          // onPress={() =>
-          //   navigation.navigate("UserProfile", { token: token, id: id })
-          // }
+            onPress={() =>
+              navigation.navigate("CreateJob", { token: token, id: id })
+            }
           >
             <Icon
-              name="user-circle"
+              name="plus"
               type="font-awesome"
               size={24}
             />
@@ -93,6 +95,9 @@ const AppNavigator = createStackNavigator({
         ),
       };
     },
+  },
+  CreateJob: {
+    screen: CreateJob,
   },
   UserProfile: {
     screen: UserProfile,
@@ -128,5 +133,8 @@ const AppNavigator = createStackNavigator({
   CompanyDetail: {
     screen: CompanyDetail,
   },
+  CreateCompany: {
+    screen: CreateCompany,
+  }
 });
 export default AppNavigator;
