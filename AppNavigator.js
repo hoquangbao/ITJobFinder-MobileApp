@@ -11,6 +11,7 @@ import UserProfile from "./screens/UserProfile";
 import CreateJob from "./screens/CreateJob";
 import CompanyDetail from "./screens/CompanyDetail";
 import CreateCompany from "./screens/CreateCompany";
+import SearchCompanyJob from "./screens/SearchCompanyJob"
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Icon } from "react-native-elements";
 
@@ -82,9 +83,9 @@ const AppNavigator = createStackNavigator({
         headerLeft: (
           <TouchableOpacity
             style={{ margin: 10 }}
-          // onPress={() =>
-          //   navigation.navigate("SearchJob", { token: token })
-          // }
+            onPress={() =>
+              navigation.navigate("SearchCompanyJob", { token: token, id: id })
+            }
           >
             <Icon
               name="search"
@@ -98,6 +99,9 @@ const AppNavigator = createStackNavigator({
   },
   CreateJob: {
     screen: CreateJob,
+  },
+  SearchCompanyJob: {
+    screen: SearchCompanyJob
   },
   UserProfile: {
     screen: UserProfile,

@@ -10,39 +10,38 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Picker,
 } from "react-native";
 import { Icon } from "react-native-elements";
+import RNPickerSelect from "react-native-picker-select";
 import axios from "axios";
 import { CREATE_JOB_URL } from "./api/api";
-import { GET_ALL_COMPANY_URL } from "./api/api";
-export default class Register extends React.Component {
+import { GET_COMPANY_URL } from "./api/api";
+export default class CreateJob extends React.Component {
   constructor(props) {
     super(props);
+    this.fetchData = this.fetchData.bind(this);
     this.state = {
       jobName: "",
       jobDescription: "",
       salary: "",
       companyId: "",
-      userId: "",
-      listCompany: [],
-    };
+      listCompany: []
+    }
   }
-  static navigationOptions = {
-    title: "Register",
-  };
 
   fetchData = () => {
     let token = this.props.navigation.state.params.token;
+    const id = this.props.navigation.state.params.id;
     var that = this;
     axios
-      .get(GET_ALL_COMPANY_URL, {
+      .get(GET_COMPANY_URL(id), {
         headers: { token: `${token}` },
       })
       .then(function (response) {
-        // handle success
-        const companyArray = response.data.listCompany
-        that.setState({ listCompany: companyArray });
-
+        // handle success 
+        let newArray = response.data.listCompany;
+        that.setState({ listCompany: newArray });
       });
   };
 
@@ -50,18 +49,29 @@ export default class Register extends React.Component {
     this.fetchData();
   }
 
+
+  static navigationOptions = {
+    title: "Create Job",
+  };
+
   submitForm = () => {
-    const user = this.props.navigation.state.params.id;
+    const id = this.props.navigation.state.params.id;
     const token = this.props.navigation.state.params.token;
     var self = this;
-    if (this.state.password.length < 6) {
-      Alert.alert("Error", "Password must > 6 characters", [
+    if (this.state.jobName.length < 1) {
+      Alert.alert("Error", "Please Enter Job Name", [
         {
           text: "Okay",
         },
       ]);
-    } else if (this.state.email.indexOf("@") === -1) {
-      Alert.alert("Message", "Email not correct", [
+    } else if (this.state.jobDescription.length < 1) {
+      Alert.alert("Message", "Please Enter Job Description", [
+        {
+          text: "Okay",
+        },
+      ]);
+    } else if (this.state.salary.length < 1) {
+      Alert.alert("Message", "Please Enter Salary", [
         {
           text: "Okay",
         },
@@ -76,14 +86,13 @@ export default class Register extends React.Component {
           jobDescription: this.state.jobDescription,
           salary: this.state.salary,
           companyId: this.state.companyId,
-          userId: user,
-          role: 1
+          userId: id,
         })
         .then(function (response) {
           self.moveToLoginScreen;
         })
         .catch(function (error) {
-          Alert.alert("Error", "Error", [
+          Alert.alert("Error", { error }, [
             {
               text: "Okay",
             },
@@ -102,6 +111,19 @@ export default class Register extends React.Component {
     );
   };
   render() {
+    let arr = this.state.listCompany
+    let values = arr.map(el => el.companyName)
+    let value0 = values[0]
+    let value1 = values[1]
+    let value2 = values[2]
+    let value3 = values[3]
+    let value4 = values[4]
+    let id = arr.map(el => el._id)
+    let id0 = id[0]
+    let id1 = id[1]
+    let id2 = id[2]
+    let id3 = id[3]
+    let id4 = id[4]
     return (
       <View
         style={{
@@ -169,6 +191,33 @@ export default class Register extends React.Component {
                   keyboardType="email-address"
                 />
               </View>
+              <View style={styles.SectionStyle}>
+                <Icon
+                  name="building"
+                  type="font-awesome"
+                  size={18}
+                  iconStyle={{ padding: 10 }}
+                  color="#413E4F"
+                />
+                <RNPickerSelect
+                  style={{
+                    ...pickerSelectStyles,
+                  }}
+                  onValueChange={value => {
+                    this.setState({
+                      companyId: value,
+                    });
+                  }}
+                  items={[
+                    { label: value0, value: id0 },
+                    { label: value1, value: id1 },
+                    { label: value2, value: id2 },
+                    { label: value3, value: id3 },
+                    { label: value4, value: id4 },
+                  ]}
+                />
+              </View>
+
               <TouchableOpacity
                 style={styles.ButtonStyle}
                 activeOpacity={0.5}
@@ -216,5 +265,27 @@ const styles = StyleSheet.create({
     marginLeft: 35,
     marginRight: 35,
     marginTop: 30,
+  },
+});
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 4,
+    color: "black",
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: "purple",
+    borderRadius: 8,
+    color: "black",
+    paddingRight: 30, // to ensure the text is never behind the icon
   },
 });
