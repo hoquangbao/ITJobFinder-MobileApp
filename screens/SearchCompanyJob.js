@@ -36,7 +36,6 @@ export default class DashBoard extends React.Component {
       .then(function (response) {
         // handle success
         const jobsArray = response.data.listJob
-        console.log(jobsArray)
         that.setState({ listJob: jobsArray });
       });
   };
