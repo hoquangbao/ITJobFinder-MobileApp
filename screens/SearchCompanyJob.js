@@ -8,7 +8,6 @@ import {
   TextInput,
   Text,
 } from "react-native";
-import { NavigationEvents } from "react-navigation";
 // You can import from local files
 import axios from "axios";
 import SearchValue from "../components/SearchValue";
