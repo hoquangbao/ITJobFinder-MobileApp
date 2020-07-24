@@ -6,9 +6,11 @@ import DashBoard from "./screens/DashBoard";
 import DashBoard_Employer from "./screens/DashBoard_Employer";
 import Register from "./screens/Register";
 import JobDetail from "./screens/JobDetail";
+import JobOfCompanyDetail from "./screens/JobOfCompanyDetail";
 import SearchJob from "./screens/SearchJob"
 import UserProfile from "./screens/UserProfile";
 import CreateJob from "./screens/CreateJob";
+import EditJob from "./screens/EditJob"
 import CompanyDetail from "./screens/CompanyDetail";
 import CreateCompany from "./screens/CreateCompany";
 import SearchCompanyJob from "./screens/SearchCompanyJob"
@@ -100,6 +102,9 @@ const AppNavigator = createStackNavigator({
   CreateJob: {
     screen: CreateJob,
   },
+  EditJob: {
+    screen: EditJob
+  },
   SearchCompanyJob: {
     screen: SearchCompanyJob
   },
@@ -133,6 +138,29 @@ const AppNavigator = createStackNavigator({
   },
   JobDetail: {
     screen: JobDetail,
+  },
+  JobOfCompanyDetail: {
+    screen: JobOfCompanyDetail,
+    // navigationOptions: ({ navigation }) => {
+    //   let token = navigation.state.params.token;
+    //   let id = navigation.state.params.id
+    //   return {
+    //     headerRight: (
+    //       <TouchableOpacity
+    //         style={{ margin: 10 }}
+    //         onPress={() =>
+    //           navigation.navigate("EditJob", { token: token, id: id })
+    //         }
+    //       >
+    //         <Icon
+    //           name="pencil"
+    //           type="font-awesome"
+    //           size={24}
+    //         />
+    //       </TouchableOpacity>
+    //     )
+    //   }
+    // }
   },
   CompanyDetail: {
     screen: CompanyDetail,

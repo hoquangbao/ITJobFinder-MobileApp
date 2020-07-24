@@ -15,36 +15,10 @@ import Axios from "axios";
 import { GET_ALL_JOB_URL } from "./api/api";
 
 export default class JobDetail extends React.Component {
-  constructor() {
-    super();
-
-    this.state = {
-      listJob: []
-      // startDate : moment(this.props.project.startDate).format("DD MMM YYYY"),
-      // endDate : moment(this.props.project.endDate).format("DD MMM YYYY"),
-    };
-  }
-
-  fetchData = () => {
-    let token = this.props.navigation.state.params.token;
-    var that = this;
-    Axios
-      .get(GET_ALL_JOB_URL, {
-        headers: { token: `${token}` },
-      })
-      .then(function (response) {
-        // handle success
-        const jobsArray = response.data.listJob
-        that.setState({ listJob: jobsArray });
-      });
-  };
-
-  componentWillMount() {
-    this.fetchData();
-  }
 
   static navigationOptions = {
     title: "Job Detail",
+
   };
   render() {
     let jobs = this.props.navigation.state.params;
@@ -52,10 +26,26 @@ export default class JobDetail extends React.Component {
     return (
       <ScrollView >
         <View style={styles.infor}>
-          <Text style={{ fontSize: 30, marginBottom: 10, fontWeight: "bold", }}>
-            {jobs.job.jobName}
-          </Text>
-
+          <View style={{ flexDirection: "row" }}>
+            <Text style={{ fontSize: 30, marginBottom: 10, fontWeight: "bold", }}>
+              {jobs.job.jobName}
+            </Text>
+            <TouchableOpacity
+              style={{ marginLeft: 70, marginTop: 10 }}
+              onPress={() =>
+                this.props.navigation.navigate("EditJob", {
+                  jobs: jobs,
+                  token: token
+                })
+              }
+            >
+              <Icon
+                name="pencil"
+                type="font-awesome"
+                size={24}
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={{ fontSize: 25, marginBottom: 10, fontWeight: "bold", color: "rgb(255, 116, 51)", }}>
             {jobs.job.salary}
           </Text>
@@ -64,12 +54,6 @@ export default class JobDetail extends React.Component {
             {jobs.job.companyId.address}
           </Text>
 
-          <TouchableOpacity
-            style={styles.button}
-          // onPress={_ => this.checkLogin()}
-          >
-            <Text style={styles.text}>Aplly Now</Text>
-          </TouchableOpacity>
         </View>
 
         <View style={{ width: "100%", height: 1, backgroundColor: "#d3d3d3" }} />
@@ -90,21 +74,6 @@ export default class JobDetail extends React.Component {
         <Text style={{ fontSize: 20, marginBottom: 10, margin: 10 }}>
           {jobs.job.jobDescription}
         </Text>
-        <View style={{ width: "100%", height: 1, backgroundColor: "#d3d3d3" }} />
-        <Text style={{ marginTop: 5, fontWeight: "bold", fontSize: 22 }}>More Jobs</Text>
-        <View>
-          <FlatList
-            data={this.state.listJob}
-            renderItem={({ item }) => (
-              <Job
-                jobs={item}
-                navigation={this.props.navigation}
-                token={this.props.navigation.state.params.token}
-              />
-            )}
-            keyExtractor={item => `${item._id}`}
-          />
-        </View>
       </ScrollView>
     );
   }

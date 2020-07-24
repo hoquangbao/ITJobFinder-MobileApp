@@ -9,7 +9,7 @@ export default class Job extends React.Component {
       <View>
         <TouchableOpacity style={styles.container}
           onPress={() =>
-            this.props.navigation.navigate("JobDetail", {
+            this.props.navigation.navigate("JobOfCompanyDetail", {
               job: this.props.jobs,
               token: this.props.token
             })
