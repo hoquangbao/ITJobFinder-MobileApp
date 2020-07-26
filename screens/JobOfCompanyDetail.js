@@ -20,6 +20,7 @@ export default class JobDetail extends React.Component {
     title: "Job Detail",
 
   };
+
   render() {
     let jobs = this.props.navigation.state.params;
     let token = this.props.navigation.state.params.token;

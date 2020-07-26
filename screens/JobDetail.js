@@ -9,6 +9,7 @@ import {
   Button,
   TextInput,
   ScrollView,
+  Alert,
 } from "react-native";
 import Job from "../components/Job"
 import Axios from "axios";
@@ -39,6 +40,19 @@ export default class JobDetail extends React.Component {
       });
   };
 
+  checkApply() {
+    Alert.alert(
+      //title
+      "Message",
+      //body
+      "Apply successfully",
+      [{
+        text: "Ok", onPress: () => this.props.navigation.navigate("DashBoard",)
+      }],
+      { cancelable: true },
+    );
+  }
+
   componentWillMount() {
     this.fetchData();
   }
@@ -66,7 +80,7 @@ export default class JobDetail extends React.Component {
 
           <TouchableOpacity
             style={styles.button}
-          // onPress={_ => this.checkLogin()}
+            onPress={_ => this.checkApply()}
           >
             <Text style={styles.text}>Aplly Now</Text>
           </TouchableOpacity>

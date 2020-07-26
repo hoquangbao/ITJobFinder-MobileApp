@@ -13,16 +13,14 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import axios from "axios";
-import { REGISTER_URL } from "./api/api";
+import { UPDATE_JOB_URL } from "./api/api";
 export default class EditJob extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "",
-      fullname: "",
-      email: "",
-      password: "",
-      phone: ""
+      jobName: "",
+      jobDescription: "",
+      salary: "",
     };
   }
   static navigationOptions = {
@@ -30,15 +28,25 @@ export default class EditJob extends React.Component {
   };
 
   submitForm = () => {
+    let id = this.props.navigation.state.params.jobs.job._id
+    const token = this.props.navigation.state.params.token;
+    const userId = this.props.navigation.state.params.jobs.job.userId
+    const companyId = this.props.navigation.state.params.jobs.job.companyId._id
     var self = this;
-    if (this.state.password.length < 6) {
-      Alert.alert("Error", "Password must > 6 characters", [
+    if (this.state.jobName.length < 1) {
+      Alert.alert("Error", "Please Enter Your Job Name", [
         {
           text: "Okay",
         },
       ]);
-    } else if (this.state.email.indexOf("@") === -1) {
-      Alert.alert("Message", "Email not correct", [
+    } else if (this.state.jobDescription.length < 1) {
+      Alert.alert("Message", "Please Enter Your Job Description", [
+        {
+          text: "Okay",
+        },
+      ]);
+    } else if (this.state.salary.length < 1) {
+      Alert.alert("Message", "Please Enter Your Job Salary", [
         {
           text: "Okay",
         },
@@ -47,26 +55,19 @@ export default class EditJob extends React.Component {
       self.moveToLoginScreen();
 
       axios
-        .post(REGISTER_URL, {
-          username: this.state.username,
-          password: this.state.password,
-          email: this.state.email,
-          phone: this.state.phone,
-          fullname: this.state.fullname,
-          role: 1
+        .patch(UPDATE_JOB_URL(id), {
+          headers: { token: `${token}` },
+          jobName: this.state.jobName,
+          jobDescription: this.state.jobDescription,
+          salary: this.state.salary,
+          userId: userId,
+          companyId: companyId,
         })
         .then(function (response) {
-          // handle success
           self.moveToLoginScreen;
-
-          //   Alert.alert("Register successfully", [
-          //     {
-          //       text: "Okay"
-          //     }
-          //   ]);
         })
         .catch(function (error) {
-          Alert.alert("Error", "Email or password not correct", [
+          Alert.alert("Error", { error }, [
             {
               text: "Okay",
             },
@@ -75,17 +76,25 @@ export default class EditJob extends React.Component {
     }
   };
   moveToLoginScreen = () => {
+    let jobs = this.props.navigation.state.params.jobs.job;
+    let token = this.props.navigation.state.params.token;
     Alert.alert(
       //title
       "Message",
       //body
-      "Register successfully",
-      [{ text: "Ok", onPress: () => this.props.navigation.navigate("Login") }],
+      "Update successfully",
+      [{
+        text: "Ok", onPress: () => this.props.navigation.push("JobOfCompEmpanyDetail", {
+          job: jobs,
+          token: token
+        })
+      }],
       { cancelable: true },
     );
   };
+
   render() {
-    console.log(this.props.navigation.state.params.jobs)
+    let job = this.props.navigation.state.params.jobs
     return (
       <View
         style={{
@@ -97,7 +106,7 @@ export default class EditJob extends React.Component {
         <ScrollView keyboardShouldPersistTaps="handled">
           <View style={{ marginTop: 50 }}>
             <KeyboardAvoidingView enabled>
-              <Text style={styles.header}>Register Account</Text>
+              <Text style={styles.header}>Job Detail </Text>
               <View style={styles.SectionStyle}>
                 <Icon
                   name="user"
@@ -108,15 +117,25 @@ export default class EditJob extends React.Component {
                 />
 
                 <TextInput
-                  style={{ flex: 1, color: "#A9A9A9" }}
-                  onChangeText={username => this.setState({ username })}
+                  style={{ flex: 1, color: "#000" }}
+                  onChangeText={jobName => this.setState({ jobName })}
+
                   underlineColorAndroid="#A9A9A9"
-                  placeholder="Enter Username"
+                  placeholder="Enter Job Name"
                   placeholderTextColor="#A9A9A9"
                   autoCapitalize="sentences"
-                />
+                >
+                  {job.job.jobName}
+                </TextInput>
               </View>
-              <View style={styles.SectionStyle}>
+              <View style={{
+                flexDirection: "row",
+                height: 80,
+                marginTop: 20,
+                marginLeft: 35,
+                marginRight: 35,
+                margin: 10,
+              }}>
                 <Icon
                   name="id-card"
                   type="font-awesome"
@@ -126,71 +145,36 @@ export default class EditJob extends React.Component {
                 />
 
                 <TextInput
-                  style={{ flex: 1, color: "#A9A9A9" }}
-                  onChangeText={fullname => this.setState({ fullname })}
+                  style={{ flex: 1, color: "#000", }}
+                  multiline={true}
+                  onChangeText={jobDescription => this.setState({ jobDescription })}
                   underlineColorAndroid="#A9A9A9"
-                  placeholder="Enter Full Name"
+                  placeholder="Enter Job Description"
                   placeholderTextColor="#A9A9A9"
                   autoCapitalize="sentences"
-                />
+                >
+                  {job.job.jobDescription}
+                </TextInput>
               </View>
               <View style={styles.SectionStyle}>
                 <Icon
-                  name="envelope"
+                  name="id-card"
                   type="font-awesome"
-                  size={18}
+                  size={16}
                   iconStyle={{ padding: 10 }}
                   color="#413E4F"
                 />
-
                 <TextInput
-                  style={{ flex: 1, color: "#A9A9A9" }}
-                  onChangeText={email => this.setState({ email })}
+                  style={{ flex: 1, color: "#000" }}
+                  onChangeText={salary => this.setState({ salary })}
                   underlineColorAndroid="#A9A9A9"
-                  placeholder="Enter  Email"
+                  placeholder="Enter Job's Salary"
                   placeholderTextColor="#A9A9A9"
                   autoCapitalize="sentences"
-                  keyboardType="email-address"
-                />
+                >
+                  {job.job.salary}
+                </TextInput>
               </View>
-              <View style={styles.SectionStyle}>
-                <Icon
-                  name="phone"
-                  type="font-awesome"
-                  size={18}
-                  iconStyle={{ padding: 10 }}
-                  color="#413E4F"
-                />
-
-                <TextInput
-                  style={{ flex: 1, color: "#A9A9A9" }}
-                  onChangeText={phone => this.setState({ phone })}
-                  underlineColorAndroid="#A9A9A9"
-                  placeholder="Enter Phone Number"
-                  placeholderTextColor="#A9A9A9"
-                  autoCapitalize="sentences"
-                  keyboardType="number-pad"
-                />
-              </View>
-              <View style={styles.SectionStyle}>
-                <Icon
-                  name="lock"
-                  type="font-awesome"
-                  size={24}
-                  iconStyle={{ padding: 12 }}
-                  color="#413E4F"
-                />
-
-                <TextInput
-                  style={{ flex: 1, color: "#A9A9A9" }}
-                  onChangeText={password => this.setState({ password })}
-                  underlineColorAndroid="#A9A9A9"
-                  placeholder="Enter Password"
-                  placeholderTextColor="#A9A9A9"
-                  secureTextEntry
-                />
-              </View>
-
               <TouchableOpacity
                 style={styles.ButtonStyle}
                 activeOpacity={0.5}
@@ -202,7 +186,7 @@ export default class EditJob extends React.Component {
                     paddingVertical: 10,
                   }}
                 >
-                  REGISTER
+                  UPDATE
                 </Text>
               </TouchableOpacity>
             </KeyboardAvoidingView>
